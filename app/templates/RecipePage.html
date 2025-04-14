@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Culinary Greats - {{ recipe.name }}{% endblock %}
+{% block extrahead %}
+<link
+rel="stylesheet"
+href="{{ url_for('static', filename='css/recipepage.css') }}"
+/>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid shadow-lg" id="recipebackground">
+      <div class="container-fluid">
+        <div class="h1 text-center" style="color: darkorange; text-shadow: 10px;">{{recipe.name}}</div>
+        <div class="row">
+          <div class="col-12" id= "carouselComponent" style="padding: 0% !important;" data-bs-theme="dark">
+            <div id="carouselExample" class="carousel slide mb-2">
+              <div class="carousel-inner">
+                <div class="carousel-item active shadow-lg">
+                  <img src="{{recipe.imageurl}}" class="d-block w-95 m-auto img-fluid rounded" alt="{{recipe.name}}, {{recipe.description}}">
+                </div>
+                {% if recipe.videourl %}
+                <div class="carousel-item shadow-lg">
+                  <div class="container d-flex justify-content-center">
+                    <iframe
+                    width="670"
+                    height="480"
+                    src="{{recipe.videourl}}"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
+                    allowfullscreen>
+                    </iframe>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+              {% if recipe.videourl %}
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid p-0" id= "recipeComponent">
+        <div class="row g-2">
+          <div class="col-md-9 d-flex flex-column">
+            <div class="box box-left bg-light p-4" style="text-align: justify; border: 3px solid black; border-radius: 10px;" id="sbs">
+              <h5 class="text-center" style="color: darkorange;">Step-by-step</h5>
+                <p class="mb-0" style="color: black">
+                  {% for step in recipe.steps %}
+                  <div class="fs-5"><span class="darkorange">Step {{loop.index}}</span><br> {{ step }}<br></div>
+                  {% endfor %}
+                </p>
+          </div>
+            <div class="box box-left mt-3 bg-light p-4" style="border: 3px solid black; border-radius: 10px;">
+              <h5 class="text" style="color: darkorange; margin-left: 10px;">FAQ</h5>
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Accordion Item #1
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Accordion Item #2
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-3">
+            <div class="bg-light box h-100 p-2" id="recipe" style="border: 3px solid black; border-radius: 10px;">
+                <h5 class="text-center" style="color: darkorange;">Ingredients</h5>
+              <p class="mb-0">
+                <ul>
+                  {% for ingredient, quantity in recipe.ingredients.items() %}
+                  <li class="fs-5"><span class="darkorange">{{ quantity }}</span> {{ ingredient.capitalize() }}</li>
+                  {% endfor %}
+                </ul>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end m-1">
+          <!-- Edit Button -->
+          <button type="button" class="btn btn-secondary" style="margin: 2px;" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+        
+          <!-- Delete Button -->
+          <button type="button" class="btn btn-danger" style="margin: 2px;" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        
+          <!-- Edit Modal -->
+          <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editModalLabel">Confirm Edit</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to edit this recipe?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <a href="/editrecipe={{recipe.id}}" class="btn btn-primary">Edit</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <!-- Delete Modal -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Are you sure you want to delete this item?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <a href="/deleterecipe={{recipe.id}}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+          <script>
+            function handleResize() {
+              const colMd9 = document.querySelector('.col-md-9');
+              const colMd3 = document.querySelector('.col-md-3');
+              const parent = colMd9.parentNode;
+
+              if (window.innerWidth <= 576) {
+                parent.insertBefore(colMd3, colMd9);
+              } else {
+                parent.insertBefore(colMd9, colMd3);
+              }
+            }
+
+            window.addEventListener('resize', handleResize);
+            window.addEventListener('load', handleResize);
+
+            const myModal = document.getElementById('myModal')
+            const myInput = document.getElementById('myInput')
+
+            myModal.addEventListener('shown.bs.modal', () => {
+              myInput.focus()
+            })
+          </script>
+      </div>
+    </div>
+    <script src="js/bootstrap.min.js"></script>
+{% endblock %}

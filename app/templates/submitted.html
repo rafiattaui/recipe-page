@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Culinary Greats - Submitted{% endblock %}
+{% block content %}
+<div class="container mt-4 p-4 rounded shadow bg-body-tertiary">
+  {% if len and len > 100 %}
+    <h1 class="text-danger">Error</h1>
+    <p>Your recipe's description must be less than 100 characters, please reduce it and try again.</p>
+    <a id="backButton" class="btn btn-secondary">Edit and Resubmit</a>
+  {% else %}
+    <h1 class="darkorange">Recipe Submitted</h1>
+    <p>Your recipe {{ name }} has been submitted successfully. Thank you for sharing!</p>
+    <a href="/" class="btn btn-primary mt-2">Go back to homepage.</a>
+    <a href="addrecipe" class="btn btn-secondary mt-2">Submit another recipe.</a>
+  {% endif %}
+</div>
+<script>
+  document.getElementById("backButton").addEventListener("click", () => {
+    // Check if there's a previous page in the history
+    if (window.history.length > 1) {
+        window.history.back(); // Go to the previous page
+    } else {
+        alert("No previous page in history!");
+    }
+  });
+</script>
+{% endblock %}

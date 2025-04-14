@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %} Page not found {% endblock %}
+{% block extrahead %}
+<style>
+    .center-box {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+        text-align: center;
+        background-color: white; /* Box background */
+        padding: 20px 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for a polished look */
+        border: 1px solid #ddd; /* Optional border for definition */
+        width: fit-content;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="center-box">
+    <h1 style="color: darkorange;">Error 404</h1>
+    <h2>Page not found.</h2>
+</div>
+{% endblock %}

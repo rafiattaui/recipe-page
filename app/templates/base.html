@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Culinary Greats{% endblock %}</title>
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/footer.css') }}"
+    />
+    {% block extrahead %}{% endblock %}
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 650, "GRAD" 0, "opsz" 40;
+      }
+
+      .recipe-div {
+        background-color: gainsboro;
+        margin-bottom: 20px;
+      }
+
+      .recipe-card {
+        border: 2px solid black;
+        border-radius: 10px;
+        transform: scale(0.95);
+        max-width: 25rem;
+      }
+
+      .recipe-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: darkorange;
+      }
+
+      .cook-button {
+        color: black;
+        background-color: darkorange;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+
+      .cook-button:hover {
+        transform: scale(1.1);
+        color: darkorange;
+        background-color: black;
+      }
+
+      .btn {
+        transition: transform 0.3s, background-color 0.3s;
+      }
+
+      .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform and shadow */
+      }
+
+      .card:hover {
+        transform: scale(1.05); /* Scale the card slightly */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Increase shadow effect */
+      }
+
+      #searchform {
+        max-width: 100%;
+        min-width: 500px;
+      }
+
+      @media (max-width: 576px) {
+        .recipe-div {
+          padding: 10px;
+        }
+        .card {
+          margin-bottom: 20px;
+        }
+
+        #searchform {
+          min-width: 50%;
+          max-width: 100%;
+        }
+      }
+
+      .recipe-img {
+        height: 150px;
+        max-width: 100%;
+        object-fit: cover;
+      }
+
+      .darkorange {
+        color: darkorange;
+      }
+
+      .upload {
+        background-color: gainsboro;
+      }
+
+      label {
+        margin: 6px 0px;
+      }
+
+      .form-control::placeholder {
+        color: black;
+        opacity: 0.25;
+      }
+
+      .remove-button {
+        color: white;
+        background-color: red;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .remove-button:hover {
+        background-color: darkred;
+      }
+    </style>
+  </head>
+  <body style="background-color: gainsboro">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top bg-white shadow">
+      <div class="container-fluid">
+        <!-- Brand -->
+        <a class="navbar-brand" href="/" style="color: darkorange">
+          Culinary Recipes<span style="color: black">.</span>
+        </a>
+        <!-- Navbar Toggle for Smaller Screens -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a href="/" class="btn btn-dark me-2 mt-2 text-white">Home</a>
+            </li>
+            <li class="nav-item mt-2">
+              <form
+                id="searchform"
+                action="{{ url_for('index_query') }}"
+                method="POST"
+                class="d-flex align-items-center"
+              >
+                <input
+                  type="text"
+                  placeholder="Search recipes. (Min 3 characters)"
+                  class="form-control me-2"
+                  aria-label="search"
+                  id="searchbar"
+                  name="query"
+                  style="
+                    border: 2px solid black;
+                    border-radius: 10px;
+                    outline: none;
+                  "
+                  {%
+                  if
+                  query
+                  %}
+                  value="{{query}}"
+                  {%
+                  endif
+                  %}
+                />
+                <button
+                  type="submit"
+                  class="btn"
+                  style="
+                    color: black;
+                    background-color: darkorange;
+                    font-weight: 550;
+                    border-radius: 10px;
+                  "
+                >
+                  Search
+                </button>
+              </form>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center mt-2">
+            <a href="/addrecipe" class="shadow text-white text-decoration-none">
+              <button
+                class="btn shadow rounded me-3 btn-success"
+                type="button"
+                id="addrecipebutton"
+              >
+                Add Recipe
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    {% block content %}
+    <!-- Default Content -->
+    {% endblock %}
+    <footer class="footer shadow-lg">
+      <div class="sliding">
+        <div class="sliding-content">
+          <span>Welcome to MSBP!</span>
+          <span>WE share RECIPES!</span>
+          <span>We offer varying recipes!</span>
+          <span>We are ONE COMMUNITY!</span>
+        </div>
+      </div>
+      <p class="slogan">Food and Recipes with Clarity!</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+      // Tooltip
+      const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]'
+      );
+      const tooltipList = [...tooltipTriggerList].map(
+        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+      );
+
+      var searchForm = document.querySelector("form");
+      var searchInput = searchForm.querySelector("input[name='query']");
+      var searchButton = searchForm.querySelector("button[type='submit']");
+
+      searchInput.addEventListener("input", function () {
+        if (searchInput.value.length < 3) {
+          searchButton.disabled = true;
+        } else {
+          searchButton.disabled = false;
+        }
+      });
+
+      // Initial check
+      if (searchInput.value.length < 3) {
+        searchButton.disabled = true;
+      }
+      // Footer position, if content is shorter than viewport, fix to bottom of viewport.
+      document.addEventListener("DOMContentLoaded", function () {
+        const footer = document.querySelector(".footer");
+        const bodyHeight = document.body.offsetHeight;
+        const windowHeight = window.innerHeight;
+
+        // Check if the content is shorter than the viewport
+        if (bodyHeight < windowHeight) {
+          footer.style.position = "fixed";
+          footer.style.bottom = "0";
+          footer.style.left = "0";
+          footer.style.width = "100%";
+        } else {
+          // If content is longer than the viewport, position relative.
+          footer.style.position = "relative";
+        }
+      });
+    </script>
+  </body>
+</html>

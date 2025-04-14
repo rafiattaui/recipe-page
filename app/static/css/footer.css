@@ -1,0 +1,54 @@
+/* Footer infinite format */
+.footer {
+  background-color: gainsboro;
+  margin-top: 15px;
+  padding: 2px 0;
+  bottom: 0; /* Set the bottom position to 0 */
+  left: 0; /* Set the left position to 0 for full width */
+  overflow: hidden;
+  text-align: center;
+  width: 100%;
+  text-align: center;
+  border-top: 3.5px solid #ff7b00;
+}
+/* Part of footer infinite format */
+.sliding {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll 30s linear infinite;
+}
+
+.sliding span {
+  margin-right: 50px;
+  font-size: 20px;
+  color: #ff7b00;
+  font-weight: bold;
+}
+.sliding-content {
+  display: inline-flex;
+}
+
+/* End of infinite format */
+
+/* Scrolling animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Social Media Section (No changes) */
+.slogan {
+  background-color: gainsboro;
+  color: #ff9900;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 32px;
+  font-weight: bold;
+  bottom: 0; /* Set the bottom position to 0 */
+  left: 0; /* Set the left position to 0 for full width */
+  position: flex;
+}

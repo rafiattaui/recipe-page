@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title%}Culinary Greats - Home{% endblock %}
+{% block extrahead %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/recipe-card.css') }}"
+/>
+{% endblock %} {% block content %}
+<!-- Recipe Cards -->
+<div class="container recipe-div mt-3">
+  <div class="row justify-content-center">
+    {% for recipe in recipes %}
+    <!-- Card Loop -->
+    <div class="col-12 col-md-4">
+      <div class="card recipe-card shadow-lg">
+        <img
+          src="{{ recipe.imageurl }}"
+          class="card-img-top recipe-img"
+          alt="{{ recipe.name }}"
+        />
+        <div class="card-body">
+          <h5 class="card-title recipe-title">{{recipe.name}}</h5>
+          <p class="card-text" style="height: 70px">{{recipe.description}}</p>
+          <a href="/recipe={{recipe.id}}" class="btn cook-button">Cook!</a>
+        </div>
+      </div>
+    </div>
+    <!-- Additional Cards... -->
+    {% endfor %}
+  </div>
+</div>
+<!-- Show error message if no recipes found. -->
+{% if recipes|length == 0 %}
+<div class="container mt-3 align-content-center justify-content-center">
+  <div class="alert alert-danger" role="alert">
+    No recipes found. Please try again or go back to <a href="/">homepage</a>.
+  </div>
+</div>
+{% endif %} {% endblock %}

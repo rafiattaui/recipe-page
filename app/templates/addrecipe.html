@@ -1,0 +1,252 @@
+{% extends "base.html" %} {% block title%}Culinary Greats - Add Recipe{%
+endblock %} {% block content %}
+<div class="upload container mt-4 p-4 mb-4 rounded shadow">
+  <h1 class="darkorange">Upload Recipe</h1>
+  <h4>Details</h4>
+  <form action="/submit" method="POST">
+    <label for="recipe-name" class="form-label">Enter recipe name:</label>
+    <input
+      type="text"
+      class="form-control"
+      id="recipe-name"
+      name="recipe_name"
+      placeholder="Recipe Name"
+      required
+    />
+
+    <label for="recipe-description" class="form-label"
+      >Enter recipe description:</label
+    >
+    <textarea
+      class="form-control"
+      id="recipe-description"
+      name="recipe_description"
+      rows="4"
+      placeholder="Short description / summary of the recipe."
+      required
+    ></textarea>
+
+    <label for="recipe-video" class="form-label"
+      >Enter recipe YouTube video link:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="recipe-video"
+      name="recipe_video"
+      placeholder="https://www.youtube.com/watch?v=example (Optional)"
+    />
+
+    <label for="recipe-image" class="form-label"
+      >Upload recipe image link:</label
+    >
+    <input
+      type="text"
+      class="form-control"
+      id="recipe-image"
+      name="recipe_image"
+      placeholder="https://via.placeholder.com/150"
+    />
+
+    <label for="recipe-difficulty" class="form-label"
+      >Select recipe difficulty:</label
+    >
+    <select class="form-select" id="recipe-difficulty" name="recipe_difficulty">
+      <option value="easy" selected>Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+
+    <label for="recipe-ingredients" class="form-label"
+      >Enter recipe ingredients:</label
+    >
+    <div id="ingredient-list">
+      <div class="row mb-3 align-items-center">
+        <div class="col">
+          <input
+            type="text"
+            name="ingredient_name[]"
+            class="form-control"
+            placeholder="Ingredient Name"
+            required
+          />
+        </div>
+        <div class="col">
+          <input
+            type="text"
+            name="ingredient_quantity[]"
+            class="form-control"
+            placeholder="Quantity (e.g., 2 cups)"
+            required
+          />
+        </div>
+        <div class="col-auto">
+          <button type="button" class="remove-button">X</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center mt-3">
+      <button type="button" class="btn btn-secondary me-2" id="add-ingredient">
+        Add Another Ingredient
+      </button>
+    </div>
+
+    <!-- Cooking Steps -->
+    <label for="recipe-steps" class="form-label mt-4"
+      >Enter Cooking Steps:</label
+    >
+    <div id="steps-list">
+      <div class="row mb-3 align-items-center step-item">
+        <div class="col-auto">
+          <span class="step-number">1.</span>
+        </div>
+        <div class="col">
+          <input
+            type="text"
+            name="recipe_step[]"
+            class="form-control"
+            placeholder="Describe step"
+            required
+          />
+        </div>
+        <div class="col-auto">
+          <button type="button" class="remove-step btn btn-danger">X</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center mt-3">
+      <button
+        type="button"
+        id="add-step"
+        class="btn btn-secondary"
+        style="margin-right: 5px"
+      >
+        Add Step
+      </button>
+      <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+<!-- JavaScript for adding and removing Ingredients and warning. -->
+<script>
+  // Form modified flag for detecting unsaved changes
+  let formModified = false;
+  document.querySelectorAll("input, select, textarea").forEach((input) => {
+    input.addEventListener("input", () => {
+      formModified = true;
+    });
+  });
+
+  // Warn the user before leaving the page
+  window.addEventListener("beforeunload", (event) => {
+    if (formModified) {
+      event.preventDefault();
+      event.returnValue = ""; // Modern browsers show their own message
+    }
+  });
+
+  // Attach "add" functionality to the "Add Another Ingredient" button
+  document
+    .getElementById("add-ingredient")
+    .addEventListener("click", function () {
+      const ingredientList = document.getElementById("ingredient-list");
+      const newRow = document.createElement("div");
+      newRow.classList.add("row", "mb-3", "align-items-center");
+      newRow.innerHTML = `
+          <div class="col">
+            <input
+              type="text"
+              name="ingredient_name[]"
+              class="form-control"
+              placeholder="Ingredient Name"
+              required
+            />
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              name="ingredient_quantity[]"
+              class="form-control"
+              placeholder="Quantity (e.g., 2 cups)"
+              required
+            />
+          </div>
+          <div class="col-auto">
+            <button type="button" class="remove-button">X</button>
+          </div>
+        `;
+      ingredientList.appendChild(newRow);
+
+      // Add event listener to the "X" button
+      newRow
+        .querySelector(".remove-button")
+        .addEventListener("click", function () {
+          newRow.remove();
+        });
+    });
+
+  // Attach "remove" functionality to initial ingredient row's "X" button
+  document.querySelectorAll(".remove-button").forEach((button) => {
+    button.addEventListener("click", function () {
+      button.closest(".row").remove();
+    });
+  });
+
+  function updateStepNumbers() {
+    // Update the step numbers
+    const stepItems = document.querySelectorAll(".step-item");
+    stepItems.forEach((item, index) => {
+      item.querySelector(".step-number").innerText = `${index + 1}.`;
+    });
+  }
+
+  // Add new steps dynamically
+  document.getElementById("add-step").addEventListener("click", () => {
+    const stepsList = document.getElementById("steps-list");
+    const newStep = document.createElement("div");
+    newStep.classList.add("row", "mb-3", "align-items-center", "step-item");
+    newStep.innerHTML = `
+          <div class="col-auto">
+            <span class="step-number"></span>
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              name="recipe_step[]"
+              class="form-control"
+              placeholder="Describe step"
+              required
+            />
+          </div>
+          <div class="col-auto">
+            <button type="button" class="remove-step btn btn-danger">X</button>
+          </div>
+        `;
+    stepsList.appendChild(newStep);
+
+    // Update numbers
+    updateStepNumbers();
+
+    // Add event listener to the "X" button
+    newStep.querySelector(".remove-step").addEventListener("click", () => {
+      newStep.remove();
+      updateStepNumbers();
+    });
+  });
+
+  // Add remove functionality to the initial step's "X" button
+  document.querySelectorAll(".remove-step").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const stepItem = event.target.closest(".step-item");
+      stepItem.remove();
+      updateStepNumbers();
+    });
+  });
+</script>
+{% endblock %}
