@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import os
+import bleach
 import firebase_admin
 from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
@@ -69,11 +70,11 @@ def addrecipe():
     
 def submit():
     # Access form data
-    recipe_name = request.form["recipe_name"]
-    recipe_description = request.form["recipe_description"]
-    recipe_video = request.form["recipe_video"]
-    recipe_image = request.form["recipe_image"]
-    recipe_difficulty = request.form["recipe_difficulty"]
+    recipe_name = bleach.clean(request.form.get("recipe_name", ))
+    recipe_description = bleach.clean(request.form.get("recipe_description",""))
+    recipe_video = bleach.clean(request.form.get("recipe_video", ""))
+    recipe_image = bleach.clean(request.form.get("recipe_image", ""))
+    recipe_difficulty = bleach.clean(request.form.get("recipe_difficulty", ""))
     
     # Ingredients (Access ingredients names and quantities as seperate lists)
     ingredient_names = request.form.getlist("ingredient_name[]")
@@ -118,11 +119,11 @@ def editrecipe(recipeid):
 @app.route("/update=<recipeid>", methods=["POST"])
 def update(recipeid):
     # Access form data
-    recipe_name = request.form["recipe_name"]
-    recipe_description = request.form["recipe_description"]
-    recipe_video = request.form["recipe_video"]
-    recipe_image = request.form["recipe_image"]
-    recipe_difficulty = request.form["recipe_difficulty"]
+    recipe_name = bleach.clean(request.form.get("recipe_name", ))
+    recipe_description = bleach.clean(request.form.get("recipe_description",""))
+    recipe_video = bleach.clean(request.form.get("recipe_video", ""))
+    recipe_image = bleach.clean(request.form.get("recipe_image", ""))
+    recipe_difficulty = bleach.clean(request.form.get("recipe_difficulty", ""))
     
     # Ingredients (Access ingredients names and quantities as seperate lists)
     ingredient_names = request.form.getlist("ingredient_name[]")
@@ -172,4 +173,4 @@ def deleterecipe(recipeid):
     return render_template("deleted.html", name=name)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)

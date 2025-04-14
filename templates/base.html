@@ -214,17 +214,6 @@
     {% block content %}
     <!-- Default Content -->
     {% endblock %}
-    <footer class="footer shadow-lg">
-      <div class="sliding">
-        <div class="sliding-content">
-          <span>Welcome to MSBP!</span>
-          <span>WE share RECIPES!</span>
-          <span>We offer varying recipes!</span>
-          <span>We are ONE COMMUNITY!</span>
-        </div>
-      </div>
-      <p class="slogan">Food and Recipes with Clarity!</p>
-    </footer>
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <script>
@@ -252,23 +241,6 @@
       if (searchInput.value.length < 3) {
         searchButton.disabled = true;
       }
-      // Footer position, if content is shorter than viewport, fix to bottom of viewport.
-      document.addEventListener("DOMContentLoaded", function () {
-        const footer = document.querySelector(".footer");
-        const bodyHeight = document.body.offsetHeight;
-        const windowHeight = window.innerHeight;
-
-        // Check if the content is shorter than the viewport
-        if (bodyHeight < windowHeight) {
-          footer.style.position = "fixed";
-          footer.style.bottom = "0";
-          footer.style.left = "0";
-          footer.style.width = "100%";
-        } else {
-          // If content is longer than the viewport, position relative.
-          footer.style.position = "relative";
-        }
-      });
     </script>
   </body>
 </html>
